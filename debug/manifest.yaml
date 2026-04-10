@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug
+  namespace: roboshop
+
+spec:
+  containers:
+    - name: debug
+      image: sangala2025/debug:v1
+      imagePullPolicy: Always
