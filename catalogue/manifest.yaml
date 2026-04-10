@@ -46,7 +46,13 @@ spec:
       containers:
       - name: catalogue
         image: sangala2025/catalogue:v1
-
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "120mi"
+          limits:
+            cpu: "100m"
+            memory: "256mi"
         envFrom:
         - configMapRef:
             name: catalogue
