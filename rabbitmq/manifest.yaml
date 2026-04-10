@@ -35,8 +35,8 @@ spec:
 
   ports:
   - protocol: TCP
-    port: 3306
-    targetPort: 3306
+    port: 5672
+    targetPort: 5672
 ---
 # rabbitmq service (cluster internal)
 apiVersion: v1
@@ -57,8 +57,8 @@ spec:
 
   ports:
   - protocol: TCP
-    port: 3306
-    targetPort: 3306
+    port: 5672
+    targetPort: 5672
 ---
 apiVersion: apps/v1
 kind: StatefulSet
