@@ -50,12 +50,12 @@ spec:
         image: sangala2025/shipping:v1
         resources:
           requests:
-            cpu: "50m"
-            memory: "120Mi"
+            cpu: "100m"
+            memory: "250Mi"
 
           limits:
-            cpu: "100m"
-            memory: "256Mi"
+            cpu: "150m"
+            memory: "500Mi"
 
         envFrom:
         - configMapRef:
