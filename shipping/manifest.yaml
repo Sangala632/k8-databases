@@ -1,0 +1,107 @@
+# ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shipping
+  namespace: roboshop
+  # deployment labels
+  labels:
+    component: shipping
+    project: roboshop
+    tier: application
+
+data:
+  CART_ENDPOINT: cart:8080 
+  DB_HOST: mysql
+
+
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipping
+  namespace: roboshop
+
+  labels:
+    component: shipping
+    project: roboshop
+    tier: application
+
+spec:
+  replicas: 1
+# These are the labels replica set use to create pod replicas, this should match pod labels
+  selector:
+    matchLabels:
+      component: shipping
+      project: roboshop
+      tier: application
+  # This is pod definition
+  template:
+    metadata:
+      labels:
+        component: shipping
+        project: roboshop
+        tier: application
+
+    spec:
+      containers:
+      - name: shipping
+        image: sangala2025/shipping:v1
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "120Mi"
+
+          limits:
+            cpu: "100m"
+            memory: "256Mi"
+
+        envFrom:
+        - configMapRef:
+            name: shipping
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: shipping
+  namespace: roboshop
+
+  labels:
+    component: shipping
+    project: roboshop
+    tier: application
+
+spec:
+
+  selector:
+    component: shipping
+    project: roboshop
+    tier: application
+
+  ports:
+  - protocol: TCP
+    port: 8080 # service port
+    targetPort: 8080 # container port
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: shipping
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: shipping
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 15
